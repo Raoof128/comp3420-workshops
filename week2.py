@@ -15,7 +15,13 @@ def summary_mnist(train_labels, test_labels, labels_list):
     {'train_labels_counts': [4, 2, 3], 'test_labels_counts': [1, 2, 1]}
     """
 
-    return {}
+    # Count occurrences for each label in the provided lists
+    train_counts = [train_labels.count(label) for label in labels_list]
+    test_counts = [test_labels.count(label) for label in labels_list]
+    return {
+        "train_labels_counts": train_counts,
+        "test_labels_counts": test_counts,
+    }
 
 def build_mnist_model(hidden_size, dropout_rate=0):
     """Return a Keras model that has 1 hidden layer based on these parameters:
@@ -42,7 +48,11 @@ def build_mnist_model(hidden_size, dropout_rate=0):
     >>> model[2].p
     0.5
 """
-    return None
+    layers = [nn.Linear(28 * 28, hidden_size), nn.ReLU()]
+    if dropout_rate > 0:
+        layers.append(nn.Dropout(dropout_rate))
+    layers.append(nn.Linear(hidden_size, 10))
+    return nn.Sequential(*layers)
 
 if __name__ == "__main__":
     import doctest
